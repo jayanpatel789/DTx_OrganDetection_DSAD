@@ -1,5 +1,5 @@
 
-##### Fix the warning for comming versions!!!
+##### Fix the warning for coming versions!!!
 import warnings
 warnings.filterwarnings("ignore")
 ##############################################
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     "\n-----------------------------------")
     detector = get_model(config)
     model = DETR_Wrapp(detector, config, criteria)
-    print("Model correctly initilized")
+    print("Model correctly initialized")
 
     update_log_screen(config.OUTPUT_LOG, 'train_screen')
     ######################################    Training       ############################################
