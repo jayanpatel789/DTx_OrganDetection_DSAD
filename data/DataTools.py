@@ -6,7 +6,7 @@ import numpy as np
 import pathlib, torch
 from typing import Callable
 
-############################## Collate funtion for dataloader
+############################## Collate function for dataloader
 
 def _max_by_axis( the_list):
     maxes = the_list[0]
@@ -23,7 +23,7 @@ def pad_and_create_pixel_mask(pixel_values_list, labels=None):
         pixel_values_list (:obj:`List[torch.Tensor]`):
             List of images (pixel values) to be padded. Each image should be a tensor of shape (C, H, W).
         labels :
-            The location of the bounday boxes must be normilized 
+            The location of the boundary boxes must be normalized 
 
     Returns:
         - **pixel_values** -- Pixel values to be fed to a model.
@@ -129,7 +129,7 @@ def get_data(config, data_tag: str, shuffle=False):
     return dataset,dataloader
 
 ######################################################
-######           FREE FUNTIONS
+######           FREE FUNCTIONS
 ######################################################
     
 def box_cxcywh_to_xyxy(x):
