@@ -112,7 +112,7 @@ def get_cfg_defaults():
 
 def combine_cfgs(path_cfg_data: Path=None):
     """
-    An internal facing routine thaat combined CFG in the order provided.
+    An internal facing routine that combined CFG in the order provided.
     :param path_cfg_data: path to path_cfg_data files
     :return: cfg_base incorporating the overwrite.
     """

@@ -16,25 +16,32 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 import torch
 
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32" # Set memory allocation for the GPU
 
 if __name__ == '__main__':
+    # Argument for a custom model configuration file, a .yaml file, proceeding -c or --configuration. For default configuration, do
+    # not add a configuration argument
     import argparse
-    parser = argparse.ArgumentParser("Training script for DETR on endoscopic images.")
+    parser = argparse.ArgumentParser("Training script for DETR on endoscopic images.") # Displayed when --help or -h argument is used
     parser.add_argument("-c", "--configuration", type=str, default=None, help = "Path to experiment specifications (.YAML file)")
     args = parser.parse_args()
+    # Check for valid config file path
     if args.configuration:
         if pathlib.Path(args.configuration).exists():
+            # If config file present, return combined config file
             config = combine_cfgs(args.configuration)
         else:
             raise FileNotFoundError(args.configuration)
     else:
+        # If no config file specified, return default config file
         config = get_cfg_defaults()
 
+    # Define the output path for the results
     exp_path = pathlib.Path.cwd() / config.OUTPUT_LOG.path / config.OUTPUT_LOG.exp_tag
     if not exp_path.exists():
         os.makedirs(exp_path)
 
+    # NOT SURE YET WHAT THIS SPECIFIC PATH IS USED FOR
     if not (exp_path/"nets").exists():
         os.makedirs(exp_path/"nets")
 
@@ -43,6 +50,7 @@ if __name__ == '__main__':
     print("Date: ", datetime.now())
     print(f"Used configuration: {config.name}")
     print(f"Folder results: {exp_path}, attempt: {config.OUTPUT_LOG.attept}")
+    
     ######################################    Load dataset ############################################
     print("-----------------------------------\n",
     "#####\t Loading dataset",
@@ -56,8 +64,8 @@ if __name__ == '__main__':
         train_dataset, train_dataloader =  get_data(config, data_tag='train', shuffle=True)
         val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
 
-
     update_log_screen(config.OUTPUT_LOG, 'train_screen')
+    
     ######################################  Loss Criteria    ############################################
     print("-----------------------------------\n",
     "#####\t Loss criteria",
