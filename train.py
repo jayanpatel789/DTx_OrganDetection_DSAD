@@ -107,12 +107,7 @@ if __name__ == '__main__':
 
     trainer.fit(model=model, train_dataloaders=train_dataloader, val_dataloaders=val_dataloader,
                 ckpt_path = config.TRAIN.checkpoint_path)
-    ########################################################################################
-    ######## Test for customized trainer
-    ## trainer = Trainer(detector, config)
-    ## print("SetUp for training completed")
-    ## trainer.fit(tr_loader=train_dataloader, va_loader=val_dataloader, epochs=200)
-    #########################################################################################
+    
     ######################################    Saving results       ############################################
     print("-----------------------------------\n",
     "#####\t Saving final model",
