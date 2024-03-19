@@ -113,7 +113,7 @@ if __name__ == '__main__':
     print(f"Used configuration: {config.name}")
     print(f"Folder results: {exp_path}")
 
-    ######################################    Load dataset ############################################
+    ###################################### Load dataset ############################################
     print("-----------------------------------\n",
     "#####\t Loading dataset",
     "\n-----------------------------------")
@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
 
-    ######################################   Model          ############################################
+    ######################################  Load model  ############################################
     print("-----------------------------------\n",
     "#####\t Model creation",
     "\n-----------------------------------")
@@ -144,17 +144,17 @@ if __name__ == '__main__':
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
 
 #########################################################################
-###################   EVAL  #############################################
+############################   EVAL  ####################################
 #########################################################################
     print("-----------------------------------\n",
-    "#####\t Evaluation on Validationset",
+    "#####\t Evaluation on validation set",
     "\n-----------------------------------")
     evaluation(val_dataloader,model,device,feat_extractor)
     torch.cuda.empty_cache()
 
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
     print("-----------------------------------\n",
-    "#####\t Evaluation on Testset",
+    "#####\t Evaluation on testset",
     "\n-----------------------------------")
     evaluation(test_dataloader,model,device,feat_extractor)
     torch.cuda.empty_cache()
