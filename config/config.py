@@ -38,7 +38,7 @@ _C.DATA.AUGMENTATION.translate          = None
 _C.DATA.AUGMENTATION.rotate             = None
 _C.DATA.AUGMENTATION.shear              = None
 _C.DATA.AUGMENTATION.probability        = 0.0
-## TRAIN holds the hyperparamentes to be used during the training of the 
+## TRAIN holds the hyperparameters to be used during the training of the 
 ## model.
 _C.TRAIN = CN()
 _C.TRAIN.n_devices      = 1
@@ -64,20 +64,20 @@ _C.TRAIN.LEARNING_SCHEDULER.cooldown        = 5
 ### Parameters for FixedStep from pytorch
 _C.TRAIN.LEARNING_SCHEDULER.fix_step   = False
 _C.TRAIN.LEARNING_SCHEDULER.step_size  = 60
-## STOP_CRITERIA paramentes for EarlyStopping from pytorch_lightning
+## STOP_CRITERIA parameters for EarlyStopping from pytorch_lightning
 _C.TRAIN.STOP_CRITERIA = CN()
 _C.TRAIN.STOP_CRITERIA.monitored_var    = "Val_loss"
 _C.TRAIN.STOP_CRITERIA.delta            = 1e-5
 _C.TRAIN.STOP_CRITERIA.mode             = "min"
 _C.TRAIN.STOP_CRITERIA.patience         = 10   ## Real_patient = patience * check_val_every_n_epoch
-## Costome loss function
+## Custom loss function
 _C.TRAIN.loss_tags = None
 _C.TRAIN.loss_components = []
 _C.TRAIN.loss_weights = []
 ## MODEL 
 _C.MODEL = CN()
 _C.MODEL.pretrained               = True
-## Backbone configuratiuon
+## Backbone configuration
 _C.MODEL.add_multi_scale_backbone = False
 _C.MODEL.mix_backbone_layers      = False
 _C.MODEL.MS_config                = "res2net50_26w_4s"

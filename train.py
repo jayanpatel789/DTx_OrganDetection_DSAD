@@ -51,7 +51,7 @@ if __name__ == '__main__':
     print(f"Used configuration: {config.name}")
     print(f"Folder results: {exp_path}, attempt: {config.OUTPUT_LOG.attept}")
     
-    ######################################    Load dataset ############################################
+    ###################################### Select dataset ############################################
     print("-----------------------------------\n",
     "#####\t Loading dataset",
     "\n-----------------------------------")
@@ -65,8 +65,7 @@ if __name__ == '__main__':
         val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
 
     update_log_screen(config.OUTPUT_LOG, 'train_screen')
-    
-    ######################################  Loss Criteria    ############################################
+    ###################################### Select Loss Criteria #####################################
     print("-----------------------------------\n",
     "#####\t Loss criteria",
     "\n-----------------------------------")
@@ -74,10 +73,10 @@ if __name__ == '__main__':
         print("Using default loss")
         criteria = None
     else:
-        print("Using costum loss")
+        print("Using custom loss")
         from Solver.SolverTools import get_loss
         criteria = get_loss(config)
-    ######################################   Model          ############################################
+    ###################################### Select Model ############################################
     print("-----------------------------------\n",
     "#####\t Model creation",
     "\n-----------------------------------")
@@ -86,19 +85,23 @@ if __name__ == '__main__':
     print("Model correctly initialized")
 
     update_log_screen(config.OUTPUT_LOG, 'train_screen')
-    ######################################    Training       ############################################
+
+
+    ######################################    Training     ########################################
     print("-----------------------------------\n",
     "#####\t Training",
     "\n-----------------------------------")
+    # Obtain early stopping criteria from config file, apply the criteria to pl EarlyStopping class
     stop_cfg = config.TRAIN.STOP_CRITERIA
     stop_criteria = EarlyStopping(monitor=stop_cfg.monitored_var, mode=stop_cfg.mode, 
                     patience=stop_cfg.patience, min_delta=stop_cfg.delta, verbose=True)
 
+    # Change accelerator here to change from gpu to cpu running
     trainer = Trainer(accelerator='gpu', devices=config.TRAIN.n_devices, 
-                enable_progress_bar=True,
-                max_epochs          = config.TRAIN.epochs, 
+                enable_progress_bar = True,
+                max_epochs          = config.TRAIN.epochs,
                 gradient_clip_val   = 0.1,
-                callbacks           = [stop_criteria], 
+                callbacks           = [stop_criteria],
                 check_val_every_n_epoch = config.TRAIN.check_val_every_n_epoch,
                 default_root_dir    = exp_path)
 
