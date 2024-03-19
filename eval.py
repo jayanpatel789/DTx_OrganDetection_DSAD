@@ -1,4 +1,3 @@
-
 ##### Fix the warning for comming versions!!!
 import warnings
 warnings.filterwarnings("ignore")
@@ -13,10 +12,9 @@ from tools import DETR_Wrapp, update_log_screen
 from modeling.ModelTools import get_model
 from data.DataTools import get_data
 
-#from detr.datasets import get_coco_api_from_dataset
+# from detr.datasets import get_coco_api_from_dataset
 from coco_eval import CocoEvaluator
 import torch
-
 
 def evaluation(current_loader,model,device,feat_extractor):
     model.to(device)
@@ -87,16 +85,21 @@ def speed_test(config,model):
 
 
 if __name__ == '__main__':
+    # Argument for a custom model configuration file, a .yaml file, proceeding -c or --configuration. For default configuration, do
+    # not add a configuration argument
     import argparse
-    parser = argparse.ArgumentParser("Training script for DETR on endoscopic images.")
+    parser = argparse.ArgumentParser("Evaluating script for DETR on endoscopic images.") # Displayed when --help or -h argument is used
     parser.add_argument("-c", "--configuration", type=str, default=None, help = "Path to experiment specifications (.YAML file)")
     args = parser.parse_args()
+    # Check for valid config file path
     if args.configuration:
         if pathlib.Path(args.configuration).exists():
+            # If config file present, return combined config file
             config = combine_cfgs(args.configuration)
         else:
             raise FileNotFoundError(args.configuration)
     else:
+        # If no config file specified, return default config file
         config = get_cfg_defaults()
 
     exp_path = pathlib.Path.cwd() / config.OUTPUT_LOG.path / config.OUTPUT_LOG.exp_tag
@@ -109,13 +112,14 @@ if __name__ == '__main__':
     print("Date: ", datetime.now())
     print(f"Used configuration: {config.name}")
     print(f"Folder results: {exp_path}")
+
     ######################################    Load dataset ############################################
     print("-----------------------------------\n",
     "#####\t Loading dataset",
     "\n-----------------------------------")
     if config.DATA.remove_background:
         config.DATA.remove_background = False
-        print("Romove background Function is not available in eval mode")
+        print("Remove background function is not available in eval mode")
     test_dataset, test_dataloader =  get_data(config, data_tag='test')
     val_dataset , val_dataloader  =  get_data(config, data_tag='val')
 
@@ -124,6 +128,7 @@ if __name__ == '__main__':
         image_mean=config.DATA.image_mean, image_std=config.DATA.image_std)
 
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
+
     ######################################   Model          ############################################
     print("-----------------------------------\n",
     "#####\t Model creation",
@@ -137,6 +142,7 @@ if __name__ == '__main__':
     model.eval()
 
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
+
 #########################################################################
 ###################   EVAL  #############################################
 #########################################################################

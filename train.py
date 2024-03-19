@@ -1,4 +1,3 @@
-
 ##### Fix the warning for coming versions!!!
 import warnings
 warnings.filterwarnings("ignore")
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     if not exp_path.exists():
         os.makedirs(exp_path)
 
-    # NOT SURE YET WHAT THIS SPECIFIC PATH IS USED FOR
+    # Define path to store the final model
     if not (exp_path/"nets").exists():
         os.makedirs(exp_path/"nets")
 
@@ -65,6 +64,7 @@ if __name__ == '__main__':
         val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
 
     update_log_screen(config.OUTPUT_LOG, 'train_screen')
+
     ###################################### Select Loss Criteria #####################################
     print("-----------------------------------\n",
     "#####\t Loss criteria",
@@ -76,6 +76,7 @@ if __name__ == '__main__':
         print("Using custom loss")
         from Solver.SolverTools import get_loss
         criteria = get_loss(config)
+    
     ###################################### Select Model ############################################
     print("-----------------------------------\n",
     "#####\t Model creation",
