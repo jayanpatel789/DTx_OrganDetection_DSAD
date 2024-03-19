@@ -20,7 +20,7 @@ _C.DATA.train_set         = "train_dataset.json"
 _C.DATA.validation_set    = "val_dataset.json"
 _C.DATA.test_set          = "test_dataset.json"
 _C.DATA.num_classes       = 7
-_C.DATA.remove_background = False  
+_C.DATA.remove_background = False # This transformation not currently ready due to issues with its implementation
 ## In evaluation the background is not removed since the labels are not updated in the COCO format. Fix this in the future.
 _C.DATA.normalize         = True
 _C.DATA.image_mean        = [0.3373, 0.2634, 0.2446]
