@@ -8,7 +8,7 @@ from typing import Callable
 
 ############################## Collate function for dataloader
 
-def _max_by_axis( the_list):
+def _max_by_axis(the_list):
     maxes = the_list[0]
     for sublist in the_list[1:]:
         for index, item in enumerate(sublist):
@@ -97,6 +97,7 @@ def trns_register(aug: dict) -> Callable:
 def get_data(config, data_tag: str, shuffle=False):
     sets_path   = pathlib.Path(config.DATA.sets_path)
     transformation = None
+    # Determine whether training, validation or testing data will be used
     if data_tag == "train":
         root = config.DATA.train_imgs_path
         json_file = sets_path/config.DATA.train_set
@@ -104,7 +105,6 @@ def get_data(config, data_tag: str, shuffle=False):
         if config.DATA.Do_augmentation:
             transformation = trns_register(config.DATA.AUGMENTATION)
             print("Transformations that will be applied on the training set:\n",transformation)
-    #
     elif data_tag == "val":
         root = config.DATA.val_imgs_path
         json_file = sets_path/config.DATA.validation_set
@@ -116,9 +116,11 @@ def get_data(config, data_tag: str, shuffle=False):
     else:
         raise ValueError ("Data type can be only one of the following {train,val,test}")
     
+    # Preprocess images
     feat_extractor = DetrImageProcessor(do_normalize=config.DATA.normalize,
         size=config.DATA.resize_shortedge, max_size=config.DATA.resize_longedge,
         image_mean=config.DATA.image_mean, image_std=config.DATA.image_std)
+    
     
     dataset = CocoMi2cai(img_folder=root, annotation_file=json_file, remove_background=config.DATA.remove_background,
             feature_extractor=feat_extractor, transformations=transformation)

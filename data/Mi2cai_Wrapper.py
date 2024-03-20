@@ -95,8 +95,8 @@ class TransWrapper(object):
         image : Pil.Image
             Image (RGB format)
         annot : list(dict('bbox': list(x,y,w,h), **more_kargs))
-            List of dictionaries for each label in a given image: Boundary boxe, object id, 
-            boxe' area, image id.
+            List of dictionaries for each label in a given image: Boundary box, object id, 
+            box' area, image id.
 
         Returns
         -------
