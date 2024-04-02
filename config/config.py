@@ -11,10 +11,10 @@ _C.DATA = CN()
 ## the model. This is a configuration for images dataset so a folder of
 ## images is expected as well as a folder for the different sets
 _C.DATA.name              = "MICCAI16_tool_loc"
-_C.DATA.root              = "../../Datasets/MICCAI16_tool/"
-_C.DATA.train_imgs_path   = "../../Datasets/MICCAI16_tool/JPEGImages/"
-_C.DATA.val_imgs_path     = "../../Datasets/MICCAI16_tool/JPEGImages/"
-_C.DATA.test_imgs_path    = "../../Datasets/MICCAI16_tool/JPEGImages/"
+_C.DATA.root              = "../../m2cai16-tool-locations/"
+_C.DATA.train_imgs_path   = "../../m2cai16-tool-locations/JPEGImages/"
+_C.DATA.val_imgs_path     = "../../m2cai16-tool-locations/JPEGImages/"
+_C.DATA.test_imgs_path    = "../../m2cai16-tool-locations/JPEGImages/"
 _C.DATA.sets_path         = "./data/datasets/"
 _C.DATA.train_set         = "train_dataset.json"
 _C.DATA.validation_set    = "val_dataset.json"
@@ -42,7 +42,7 @@ _C.DATA.AUGMENTATION.probability        = 0.0
 ## model.
 _C.TRAIN = CN()
 _C.TRAIN.n_devices      = 1
-_C.TRAIN.epochs         = 20000
+_C.TRAIN.epochs         = 5 # Test value
 _C.TRAIN.train_batch    = 16
 _C.TRAIN.val_batch      = 8
 _C.TRAIN.test_batch     = 8 
