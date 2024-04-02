@@ -11,10 +11,10 @@ _C.DATA = CN()
 ## the model. This is a configuration for images dataset so a folder of
 ## images is expected as well as a folder for the different sets
 _C.DATA.name              = "MICCAI16_tool_loc"
-_C.DATA.root              = "../../m2cai16-tool-locations/"
-_C.DATA.train_imgs_path   = "../../m2cai16-tool-locations/JPEGImages/"
-_C.DATA.val_imgs_path     = "../../m2cai16-tool-locations/JPEGImages/"
-_C.DATA.test_imgs_path    = "../../m2cai16-tool-locations/JPEGImages/"
+_C.DATA.root              = "../m2cai16-tool-locations/"
+_C.DATA.train_imgs_path   = "../m2cai16-tool-locations/JPEGImages/"
+_C.DATA.val_imgs_path     = "../m2cai16-tool-locations/JPEGImages/"
+_C.DATA.test_imgs_path    = "../m2cai16-tool-locations/JPEGImages/"
 _C.DATA.sets_path         = "./data/datasets/"
 _C.DATA.train_set         = "train_dataset.json"
 _C.DATA.validation_set    = "val_dataset.json"
