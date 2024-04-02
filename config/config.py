@@ -10,7 +10,7 @@ _C.DATA = CN()
 ## DATA holds all the configuration to process the data before going into
 ## the model. This is a configuration for images dataset so a folder of
 ## images is expected as well as a folder for the different sets
-_C.DATA.name              = "MICCAI16_tool_loc"
+_C.DATA.name              = "m2cai16-tool-locations"
 _C.DATA.root              = "../../m2cai16-tool-locations/"
 _C.DATA.train_imgs_path   = "../../m2cai16-tool-locations/JPEGImages/"
 _C.DATA.val_imgs_path     = "../../m2cai16-tool-locations/JPEGImages/"
