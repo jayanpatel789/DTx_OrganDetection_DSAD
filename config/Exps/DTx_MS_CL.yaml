@@ -31,5 +31,5 @@ MODEL:
   
 OUTPUT_LOG:
   exp_tag : "DTxMsCL"
-  attept  : "_00"
+  attempt  : "_00"
 

@@ -135,7 +135,7 @@ if __name__ == '__main__':
     "\n-----------------------------------")
     detector = get_model(config)
     model = DETR_Wrapp(detector, config)
-    model_path = exp_path/"nets"/f'final{config.OUTPUT_LOG.attept}.pt'
+    model_path = exp_path/"nets"/f'final{config.OUTPUT_LOG.attempt}.pt'
     model.model.load_state_dict(torch.load(model_path))
     print(f"Model {model_path} was loaded corectly")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

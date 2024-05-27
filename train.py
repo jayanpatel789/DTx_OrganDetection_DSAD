@@ -48,7 +48,7 @@ if __name__ == '__main__':
     print(f"Training of DETR model on {config.DATA.name}")
     print("Date: ", datetime.now())
     print(f"Used configuration: {config.name}")
-    print(f"Folder results: {exp_path}, attempt: {config.OUTPUT_LOG.attept}")
+    print(f"Folder results: {exp_path}, attempt: {config.OUTPUT_LOG.attempt}")
     
     ###################################### Select dataset ############################################
     print("-----------------------------------\n",
@@ -116,4 +116,4 @@ if __name__ == '__main__':
 
     if not (exp_path/"nets").exists():
         os.makedirs(exp_path/"nets")
-    torch.save(detector.state_dict(), exp_path/"nets"/f"final{config.OUTPUT_LOG.attept}.pt")
+    torch.save(detector.state_dict(), exp_path/"nets"/f"final{config.OUTPUT_LOG.attempt}.pt")

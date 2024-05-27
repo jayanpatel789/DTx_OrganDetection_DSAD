@@ -32,7 +32,7 @@ def update_log_screen(config_log, file_name = 'log_screen', mode = 'a'):
     """ Update the log screen to save the output of the model"""
     if config_log.save_log:
         exp_path = pathlib.Path.cwd() / config_log.path / config_log.exp_tag
-        log_file = f"{file_name}{config_log.attept}.txt"
+        log_file = f"{file_name}{config_log.attempt}.txt"
         screen_path = exp_path/log_file
         if mode == 'a':
             sys.stdout.close()  
@@ -121,7 +121,7 @@ class DETR_Wrapp(pl.LightningModule):
         pixel_values = batch["pixel_values"]
         pixel_mask = batch["pixel_mask"]
         labels = [{k: v for k, v in t.items()} for t in batch["labels"]]
-        # if no costum loss is defined, the model returns cross_entropy loss, boxes_loss {loss_giou + L1_norm_loss}, cardinality_loss
+        # if no custom loss is defined, the model returns cross_entropy loss, boxes_loss {loss_giou + L1_norm_loss}, cardinality_loss
         if self.criteria is None:
             outputs = self.model(pixel_values=pixel_values, pixel_mask=pixel_mask, labels=labels)
             loss_dict = outputs.loss_dict
@@ -197,7 +197,7 @@ class DETR_Wrapp(pl.LightningModule):
 
     def _update_loss(self, loss, loss_dict, l_type=None):
         """ Update the loss values in the log dictionaries and in the 
-        tensorboard log. The tensorboard log is used to in the scheduler 
+        tensorboard log. The tensorboard log is used for the scheduler 
         and early stopping. The log dictionaries are used to print the 
         loss values on the screen."""
         if l_type == None:

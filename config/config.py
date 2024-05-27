@@ -101,7 +101,7 @@ _C.OUTPUT_LOG = CN()
 _C.OUTPUT_LOG.path              = "Results"
 _C.OUTPUT_LOG.exp_tag           = "default"
 _C.OUTPUT_LOG.save_log          = False
-_C.OUTPUT_LOG.attept            = "0"
+_C.OUTPUT_LOG.attempt            = "0"
 
 
 def get_cfg_defaults():

@@ -25,5 +25,5 @@ MODEL:
 
 OUTPUT_LOG:
   exp_tag : "DTx"
-  attept  : "_00"
+  attempt  : "_00"
 
