@@ -102,7 +102,7 @@ class DTX(torch.nn.Module):
         self.encoder = model.encoder
         self.decoder = model.decoder
         
-        # Original implementation apply a costum initialization of weights
+        # Original implementation apply a customm initialization of weights
         
     def forward(
         self,
@@ -116,6 +116,8 @@ class DTX(torch.nn.Module):
         output_hidden_states=None,
         return_dict=None,
     ):
+        # Setting of default values for the output attentions, hidden states and return types, dependent on
+        # the configuration of the model (if those parameters have been selected in the config)
         output_attentions = output_attentions if output_attentions is not None else self.config.output_attentions
         output_hidden_states = (
             output_hidden_states if output_hidden_states is not None else self.config.output_hidden_states

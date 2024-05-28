@@ -6,7 +6,7 @@ import numpy as np
 import pathlib, torch
 from typing import Callable
 
-############################## Collate function for dataloader
+############################## Collation of functions for the dataloader
 
 def _max_by_axis(the_list):
     maxes = the_list[0]

@@ -20,7 +20,7 @@ def change_backbone(model, config):
     model.layer4 = encoder.layer4
     
 
-def load_wieghts_coder(new_coder, trained_coder, num_layers=6):
+def load_weights_coder(new_coder, trained_coder, num_layers=6):
     """Function to load weights from a trained encoder or decoder to a new 
     transformer starting from the final layer and going backwards"""
     for i in range (num_layers):  ## I substract 1 because the layers are indexed from 0
@@ -43,9 +43,9 @@ def update_transformer(detector, TX_config):
     # Loading weights from the trained model
     if TX_config.load_weights:
         print("Loading weights from trained transformer")
-        detector.model.encoder = load_wieghts_coder(
+        detector.model.encoder = load_weights_coder(
             modified_model.encoder, detector.model.encoder, TX_config.encoder_layers)
-        detector.model.decoder = load_wieghts_coder(
+        detector.model.decoder = load_weights_coder(
             modified_model.decoder, detector.model.decoder, TX_config.decoder_layers)
     
 
