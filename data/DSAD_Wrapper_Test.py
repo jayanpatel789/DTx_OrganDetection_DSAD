@@ -1,6 +1,7 @@
 import DSAD_Wrapper
 import os
 import re
+import matplotlib
 
 def dataset_test():
     pass
@@ -19,9 +20,14 @@ def dataset_test():
             pass
         else:
             # print(f"{image_path} + {mask_path}")
-            print("Oh dear")
+            print("Oh dear. Err1")
             return
-        
+    
+    # Check that the __len__ method works
+    class_length = Dataset.__len__()
+    if class_length != len(file_paths):
+        print("Oh dear. Err2")
+
     print("Hooray")
 
 
@@ -42,7 +48,7 @@ def verify_paths(image_path, mask_path):
     if image_dir != mask_dir:
         return False
 
-    # Check if the prefixes are 'image' and 'mask' and the numbers are the same
+    # Check if the image and mask nubers are the same
     if img_no != mask_no:
         return False
 
