@@ -2,8 +2,15 @@ from PIL import Image
 import numpy as np
 import os
 from glob import glob
-import copy
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, DataLoader
+import pytorch_lightning as pl
+from torchvision import transforms
+
+# Define standard transformation
+transform = transforms.Compose([
+    transforms.Resize((256, 256)),
+    transforms.ToTensor(),
+])
 
 class DSAD_Dataset(Dataset):
     """
@@ -22,7 +29,7 @@ class DSAD_Dataset(Dataset):
     paths = [r'c:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD',
              r'tbc']
 
-    def __init__(self, mode, transform=None):
+    def __init__(self, mode, transform):
         # Initialise configurations
         self.mode = mode
         # Select the surgeries to be used
@@ -45,7 +52,7 @@ class DSAD_Dataset(Dataset):
 
         # Go through the surgeries of the selected mode in the DSAD path and
         # collate all the image and mask paths
-        self.file_paths = DSADFilePathCollection(self.mode, self.path)
+        self.file_paths = DSADFilePathCollection(self.surgery_set, self.path)
 
     def __len__(self):
         # Return length of the data structure storing paths
@@ -63,8 +70,27 @@ class DSAD_Dataset(Dataset):
 
         return image, mask
     
+class DSAD_DataModule(pl.LightningDataModule):
+    def __init__(self, batch_size=4, num_workers=4, transform=transform):
+        super().__init__()
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.transform = transform
 
-        
+    def setup(self, stage=None):
+        self.train_dataset = DSAD_Dataset('train', transform=self.transform)
+        self.val_dataset = DSAD_Dataset('val', transform=self.transform)
+        self.test_dataset = DSAD_Dataset('test', transform=self.transform)
+
+    def train_dataloader(self):
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+
+    def val_dataloader(self):
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
+
+    def test_dataloader(self):
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
+
 
 def DSADFilePathCollection(surgery_set, root_dir):
     """
@@ -95,9 +121,11 @@ def DSADFilePathCollection(surgery_set, root_dir):
             if os.path.exists(surgery_dir):
                 images = glob(os.path.join(surgery_dir, 'image*.png'))
                 masks = glob(os.path.join(surgery_dir, 'mask*.png'))
-                images.sort()  # Ensuring the images and masks are aligned
-                masks.sort()   # Sorting is important if glob doesn't guarantee order
+                # Sort images and masks so that the images and masks are aligned
+                images.sort()
+                masks.sort()
                 for img, mask in zip(images, masks):
                     file_paths.append((img, mask))
+    
     return file_paths
 
