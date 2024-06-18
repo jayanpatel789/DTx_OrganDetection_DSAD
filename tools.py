@@ -77,11 +77,12 @@ import torchvision.transforms.functional as torch_TF
 class DETR_Wrapp(pl.LightningModule):
     """ Wrapper for the DETR model to use it with pytorch lightning"""
     def __init__(self, model, config, criteria = None):
-        """ Initialize the wrapper
+        """ 
+        Initialize the wrapper
         Args:
             model (DETR): DETR-based model
             config (dict): Configuration dictionary
-            """
+        """
         super().__init__()
         self.model         = model
         self.weight_decay  = config.TRAIN.weight_decay

@@ -54,25 +54,35 @@ from transformers import DetrForObjectDetection, DetrConfig, DetrModel
 from modeling.DTx import DTX
 
 def get_model(config):
+    # Importing a pretrained resnet backbone from transformers library
+    # num_labels = number of classes within the dataset
+    # ignore_mismatches_sizes = whether number of classes is the same as the pretrained data
     detector = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50", 
             num_labels=config.DATA.num_classes, ignore_mismatched_sizes=True)
     
+    # If chosen to not be pretrained, reinitialise all weights
     if not config.MODEL.pretrained:
         weights_cfg = DetrConfig()
         print("Reinitializing all weights...")
-        detector.model = DetrModel(weights_cfg)
+        detector.model = DetrModel(weights_cfg) # Resetting model with reinitialised weights
     
+    # Sets all parameters in the model to have gradients so that the model can be trained
     for _, param in detector.named_parameters():
         param.requires_grad = True
     
+    # If multi scale backbone chosen to be added, change model backbone to convolution encoder
     if config.MODEL.add_multi_scale_backbone:
         print("Changing backbone config.")
         change_backbone(detector.model.backbone.conv_encoder.model, config.MODEL)
     
+    # If custom transformer chosen, load transformer with custom settings from config
     if config.MODEL.TX.custom:
         print("Changing transformer config.")
         update_transformer(detector, config.MODEL.TX)
 
+    # Dense inference refers to connections between backbone and transformer
+    # If dense inference chosen, set model to in detecter object to a DTX model that is setup
+    # for dense connections
     if config.MODEL.dense_inference:
         print("Adding connections for dense inference.")
         print(f"Used feature maps are {config.MODEL.feature_selection}")
