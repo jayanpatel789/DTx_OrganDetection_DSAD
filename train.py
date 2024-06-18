@@ -59,7 +59,9 @@ if __name__ == '__main__':
         train_dataset, train_dataloader =  get_data(config, data_tag='train', shuffle=True)
         val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
     elif config.DATA.name == 'DSAD':
-        from data.DSAD_Wrapper import DSAD_DataModule
+        from data.DataTools import get_data
+        train_dataset, train_dataloader =  get_data(config, data_tag='train', shuffle=True)
+        val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
         # To be inserted
 
     # elif config.DATA.name == 'SurgToolLoc_1126':
