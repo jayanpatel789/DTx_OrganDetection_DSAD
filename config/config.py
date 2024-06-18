@@ -10,6 +10,7 @@ _C.DATA = CN()
 ## DATA holds all the configuration to process the data before going into
 ## the model. This is a configuration for images dataset so a folder of
 ## images is expected as well as a folder for the different sets
+# FOR HPC
 _C.DATA.name              = "DSAD"
 _C.DATA.root              = "../DSAD4DeTr/"
 _C.DATA.train_imgs_path   = "../DSAD4DeTr/train/images/"
@@ -21,6 +22,20 @@ _C.DATA.validation_set    = "/val/annotations/val_annotations.json"
 _C.DATA.test_set          = "/test/annotations/test_annotations.json"
 _C.DATA.num_classes       = 11 # This is changed to the number of organs. No background class as it is just bounding and segmenting desired regions
 _C.DATA.remove_background = False # This transformation not currently ready due to issues with its implementation
+
+# # FOR PC (testing)
+# _C.DATA.name              = "DSAD"
+# _C.DATA.root              = r"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr"
+# _C.DATA.train_imgs_path   = r"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr\train\images"
+# _C.DATA.val_imgs_path     = r"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr\val\images"
+# _C.DATA.test_imgs_path    = r"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr\test\images"
+# _C.DATA.sets_path         = r"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr"
+# _C.DATA.train_set         = r"train\annotations\train_annotations.json"
+# _C.DATA.validation_set    = r"val\annotations\val_annotations.json"
+# _C.DATA.test_set          = r"test\annotations\test_annotations.json"
+# _C.DATA.num_classes       = 11 # This is changed to the number of organs. No background class as it is just bounding and segmenting desired regions
+# _C.DATA.remove_background = False # This transformation not currently ready due to issues with its implementation
+
 ## In evaluation the background is not removed since the labels are not updated in the COCO format. Fix this in the future.
 _C.DATA.normalize         = True
 _C.DATA.image_mean        = [0.3373, 0.2634, 0.2446]

@@ -12,11 +12,11 @@ from transformers import DetrImageProcessor
 import os
 
 class CocoDSAD(CocoDetection):
-    def __init__(self, img_folder, anno_file, remove_background=False,
-                 transformations=None, preprocessor=None):
-        super(CocoDSAD, self).__init__(img_folder, anno_file)
+    def __init__(self, img_folder, annotation_file, remove_background=False,
+                 transformations=None, feature_extractor=None):
+        super(CocoDSAD, self).__init__(img_folder, annotation_file)
         self.transformations = transformations
-        self.preprocessor = preprocessor
+        self.preprocessor = feature_extractor
         # This code is copied in from the Mi2cai_Wrapper
         if remove_background:
             print("The background will be removed")

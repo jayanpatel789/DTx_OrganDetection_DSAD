@@ -111,7 +111,7 @@ if __name__ == '__main__':
                 callbacks           = [stop_criteria],
                 check_val_every_n_epoch = config.TRAIN.check_val_every_n_epoch,
                 default_root_dir    = exp_path)
-
+    print("Trainer fitting reached")
     trainer.fit(model=model, train_dataloaders=train_dataloader, val_dataloaders=val_dataloader,
                 ckpt_path = config.TRAIN.checkpoint_path)
     
