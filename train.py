@@ -58,10 +58,14 @@ if __name__ == '__main__':
         from data.DataTools import get_data
         train_dataset, train_dataloader =  get_data(config, data_tag='train', shuffle=True)
         val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
-    elif config.DATA.name == 'SurgToolLoc_1126':
-        from data.SurgToolLoc_wraper import get_data
-        train_dataset, train_dataloader =  get_data(config, data_tag='train', shuffle=True)
-        val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
+    elif config.DATA.name == 'DSAD':
+        from data.DSAD_Wrapper import DSAD_DataModule
+        # To be inserted
+
+    # elif config.DATA.name == 'SurgToolLoc_1126':
+    #     from data.SurgToolLoc_wraper import get_data
+    #     train_dataset, train_dataloader =  get_data(config, data_tag='train', shuffle=True)
+    #     val_dataset  , val_dataloader   =  get_data(config, data_tag='val')
 
     update_log_screen(config.OUTPUT_LOG, 'train_screen')
 
@@ -75,14 +79,14 @@ if __name__ == '__main__':
     else:
         print("Using custom loss")
         from Solver.SolverTools import get_loss
-        criteria = get_loss(config)
+        criteria = get_loss(config) # Obtain the loss type
     
     ###################################### Select Model ############################################
     print("-----------------------------------\n",
     "#####\t Model creation",
     "\n-----------------------------------")
     detector = get_model(config)
-    model = DETR_Wrapp(detector, config, criteria)
+    model = DETR_Wrapp(detector, config, criteria) # Criteria is the loss
     print("Model correctly initialized")
 
     update_log_screen(config.OUTPUT_LOG, 'train_screen')

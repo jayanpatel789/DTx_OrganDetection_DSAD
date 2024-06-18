@@ -1,6 +1,6 @@
 from transformers import DetrImageProcessor
 from torch.utils.data import DataLoader
-from data.Mi2cai_Wrapper import TransWrapper, CocoMi2cai
+from data.DSAD_Wrapper import TransWrapper, CocoDSAD
 from data.data_aug.data_aug import TRANSF_DICT, Sequence
 import numpy as np
 import pathlib, torch
@@ -122,7 +122,7 @@ def get_data(config, data_tag: str, shuffle=False):
         image_mean=config.DATA.image_mean, image_std=config.DATA.image_std)
     
     
-    dataset = CocoMi2cai(img_folder=root, annotation_file=json_file, remove_background=config.DATA.remove_background,
+    dataset = CocoDSAD(img_folder=root, annotation_file=json_file, remove_background=config.DATA.remove_background,
             feature_extractor=feat_extractor, transformations=transformation)
     dataloader = DataLoader(dataset, collate_fn=collate_fn, batch_size=batch_size, shuffle=shuffle)
     print(f"Number of samples for {data_tag} from {json_file}:", len(dataset))

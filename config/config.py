@@ -10,16 +10,16 @@ _C.DATA = CN()
 ## DATA holds all the configuration to process the data before going into
 ## the model. This is a configuration for images dataset so a folder of
 ## images is expected as well as a folder for the different sets
-_C.DATA.name              = "MICCAI16_tool_loc"
-_C.DATA.root              = "../m2cai16-tool-locations/"
-_C.DATA.train_imgs_path   = "../m2cai16-tool-locations/JPEGImages/"
-_C.DATA.val_imgs_path     = "../m2cai16-tool-locations/JPEGImages/"
-_C.DATA.test_imgs_path    = "../m2cai16-tool-locations/JPEGImages/"
-_C.DATA.sets_path         = "./data/datasets/"
-_C.DATA.train_set         = "train_dataset.json"
-_C.DATA.validation_set    = "val_dataset.json"
-_C.DATA.test_set          = "test_dataset.json"
-_C.DATA.num_classes       = 7
+_C.DATA.name              = "DSAD"
+_C.DATA.root              = "../DSAD4DeTr/"
+_C.DATA.train_imgs_path   = "../DSAD4DeTr/train/images/"
+_C.DATA.val_imgs_path     = "../DSAD4DeTr/val/images/"
+_C.DATA.test_imgs_path    = "../DSAD4DeTr/test/images/"
+_C.DATA.sets_path         = "../DSAD4DeTr/"
+_C.DATA.train_set         = "/train/annotations/train_annotations.json"
+_C.DATA.validation_set    = "/val/annotations/val_annotations.json"
+_C.DATA.test_set          = "/test/annotations/test_annotations.json"
+_C.DATA.num_classes       = 11 # This is changed to the number of organs. No background class as it is just bounding and segmenting desired regions
 _C.DATA.remove_background = False # This transformation not currently ready due to issues with its implementation
 ## In evaluation the background is not removed since the labels are not updated in the COCO format. Fix this in the future.
 _C.DATA.normalize         = True
@@ -85,7 +85,7 @@ _C.MODEL.MS_config                = "res2net50_26w_4s"
 _C.MODEL.TX = CN()
 _C.MODEL.TX.queries = None
 _C.MODEL.TX.custom         = False
-_C.MODEL.TX.load_weights   = True   # Load as many as possible weights from pretrained transformer
+_C.MODEL.TX.load_weights   = True   # Load as many weights as possible from pretrained transformer
 _C.MODEL.TX.encoder_layers = 6
 _C.MODEL.TX.decoder_layers = 6
 _C.MODEL.TX.hidden_dim     = 256    # The length of the feature vectors (projection from the backbone) NOT WORKING YET
