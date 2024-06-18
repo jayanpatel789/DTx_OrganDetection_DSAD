@@ -17,9 +17,9 @@ _C.DATA.train_imgs_path   = "../DSAD4DeTr/train/images/"
 _C.DATA.val_imgs_path     = "../DSAD4DeTr/val/images/"
 _C.DATA.test_imgs_path    = "../DSAD4DeTr/test/images/"
 _C.DATA.sets_path         = "../DSAD4DeTr/"
-_C.DATA.train_set         = "/train/annotations/train_annotations.json"
-_C.DATA.validation_set    = "/val/annotations/val_annotations.json"
-_C.DATA.test_set          = "/test/annotations/test_annotations.json"
+_C.DATA.train_set         = "train/annotations/train_annotations.json"
+_C.DATA.validation_set    = "val/annotations/val_annotations.json"
+_C.DATA.test_set          = "test/annotations/test_annotations.json"
 _C.DATA.num_classes       = 11 # This is changed to the number of organs. No background class as it is just bounding and segmenting desired regions
 _C.DATA.remove_background = False # This transformation not currently ready due to issues with its implementation
 
