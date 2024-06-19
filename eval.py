@@ -6,6 +6,7 @@ warnings.filterwarnings("ignore")
 import os,sys,pathlib
 from datetime import datetime
 from config.config import get_cfg_defaults, combine_cfgs
+import matplotlib.pyplot as plt
 
 from transformers import DetrImageProcessor
 from tools import DETR_Wrapp, update_log_screen
@@ -16,11 +17,16 @@ from data.DataTools import get_data
 from coco_eval import CocoEvaluator
 import torch
 
-def evaluation(current_loader,model,device,feat_extractor):
+def evaluation(current_loader,model,device,feat_extractor,image_location):
     model.to(device)
     base_dataset = current_loader.dataset.coco
     iou_types = ['bbox']
     coco_evaluator = CocoEvaluator(base_dataset, iou_types) # initialize evaluator with ground truths
+    
+    # Define some parameters for image output
+    images_shown = 0
+    max_images_to_show = 20
+
     with torch.no_grad():
         for idx, batch in enumerate(current_loader):
             # get the inputs
@@ -35,16 +41,57 @@ def evaluation(current_loader,model,device,feat_extractor):
             results = feat_extractor.post_process(outputs, orig_target_sizes) # convert outputs of model to COCO api
             res = {target['image_id'].item(): output for target, output in zip(labels, results)}
             coco_evaluator.update(res)
+            
+            # Print images
+            if images_shown < max_images_to_show:
+                for i, result in enumerate(results):
+                    if images_shown >= max_images_to_show:
+                        break
+
+                    # Get original image and predictions
+                    image = pixel_values[i]
+                    boxes = result['boxes']
+                    scores = result['scores']
+                    labels = result['labels']
+                    image_id = target['image_id'].item()
+
+                    # Plot image with predictions
+                    exp_path = pathlib.Path.cwd() / config.OUTPUT_LOG.path / config.OUTPUT_LOG.exp_tag
+                    if not exp_path.exists():
+                        os.makedirs(exp_path)
+                    plot_image_with_predictions(image, image_id, boxes, scores, labels, image_location)
+                    images_shown += 1
+            
             del outputs
 
     coco_evaluator.synchronize_between_processes()
     coco_evaluator.accumulate()
     coco_evaluator.summarize()
+
+def plot_image_with_predictions(image,id,boxes,scores,labels,image_location,threshold=0.5):
+    # Convert tensor image to numpy
+    image = image.permute(1, 2, 0).cpu().numpy()
+    # Normalize the image
+    image = (image - image.min()) / (image.max() - image.min())
+    plt.imshow(image)
+    ax = plt.gca()
+
+    for box, score, label in zip(boxes, scores, labels):
+        if score >= threshold:
+            xmin, ymin, xmax, ymax = box
+            rect = plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, fill=False, color='red', linewidth=2)
+            ax.add_patch(rect)
+            ax.text(xmin, ymin, f'{label}: {score:.2f}', bbox=dict(facecolor='yellow', alpha=0.5))
+
+    plt.axis('off')
+    plt.savefig(os.path.join(image_location, f"output_{id}.png"))
+    plt.close()
+
     
 
 def speed_test(config,model):
     model.to(device)
-    config.DATA.remove_background = True
+    config.DATA.remove_background = False
     config.DATA.resize_longedge = config.DATA.resize_shortedge
     print("input size: ",config.DATA.resize_shortedge,"X", config.DATA.resize_longedge)
     _, loader = get_data(config, data_tag='test')
@@ -105,6 +152,10 @@ if __name__ == '__main__':
     exp_path = pathlib.Path.cwd() / config.OUTPUT_LOG.path / config.OUTPUT_LOG.exp_tag
     if not exp_path.exists():
         os.makedirs(exp_path)
+
+    image_location = exp_path / "image_results"
+    if not exp_path.exists():
+        os.makedirs(image_location)
     
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen', 'w')
         
@@ -149,7 +200,7 @@ if __name__ == '__main__':
     print("-----------------------------------\n",
     "#####\t Evaluation on validation set",
     "\n-----------------------------------")
-    evaluation(val_dataloader,model,device,feat_extractor)
+    evaluation(val_dataloader,model,device,feat_extractor,image_location)
     torch.cuda.empty_cache()
 
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
