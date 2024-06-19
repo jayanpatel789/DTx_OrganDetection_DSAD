@@ -154,8 +154,9 @@ if __name__ == '__main__':
         os.makedirs(exp_path)
 
     image_location = exp_path / "image_results"
-    if not exp_path.exists():
+    if not image_location.exists():
         os.makedirs(image_location)
+
     
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen', 'w')
         
