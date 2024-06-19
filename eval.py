@@ -17,7 +17,7 @@ from data.DataTools import get_data
 from coco_eval import CocoEvaluator
 import torch
 
-def evaluation(current_loader,model,device,feat_extractor,image_location):
+def evaluation(current_loader,model,device,feat_extractor,images_out=False,image_location=None):
     model.to(device)
     base_dataset = current_loader.dataset.coco
     iou_types = ['bbox']
@@ -43,24 +43,25 @@ def evaluation(current_loader,model,device,feat_extractor,image_location):
             coco_evaluator.update(res)
             
             # Print images
-            if images_shown < max_images_to_show:
-                for i, (result, target) in enumerate(zip(results, labels)):
-                    if images_shown >= max_images_to_show:
-                        break
+            if images_out == True:
+                if images_shown < max_images_to_show:
+                    for i, (result, target) in enumerate(zip(results, labels)):
+                        if images_shown >= max_images_to_show:
+                            break
 
-                    # Get original image and predictions
-                    image = pixel_values[i]
-                    boxes = result['boxes']
-                    scores = result['scores']
-                    labels = result['labels']
-                    image_id = target['image_id'].item()
+                        # Get original image and predictions
+                        image = pixel_values[i]
+                        boxes = result['boxes']
+                        scores = result['scores']
+                        labels = result['labels']
+                        image_id = target['image_id'].item()
 
-                    # Plot image with predictions
-                    exp_path = pathlib.Path.cwd() / config.OUTPUT_LOG.path / config.OUTPUT_LOG.exp_tag
-                    if not exp_path.exists():
-                        os.makedirs(exp_path)
-                    plot_image_with_predictions(image, image_id, boxes, scores, labels, image_location)
-                    images_shown += 1
+                        # Plot image with predictions
+                        exp_path = pathlib.Path.cwd() / config.OUTPUT_LOG.path / config.OUTPUT_LOG.exp_tag
+                        if not exp_path.exists():
+                            os.makedirs(exp_path)
+                        plot_image_with_predictions(image, image_id, boxes, scores, labels, image_location)
+                        images_shown += 1
             
             del outputs
 
@@ -201,7 +202,8 @@ if __name__ == '__main__':
     print("-----------------------------------\n",
     "#####\t Evaluation on validation set",
     "\n-----------------------------------")
-    evaluation(val_dataloader,model,device,feat_extractor,image_location)
+    evaluation(val_dataloader,model,device,feat_extractor,
+               images_out=True,image_location=image_location)
     torch.cuda.empty_cache()
 
     update_log_screen(config.OUTPUT_LOG, 'evaluation_screen')
