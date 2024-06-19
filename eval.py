@@ -44,7 +44,7 @@ def evaluation(current_loader,model,device,feat_extractor,image_location):
             
             # Print images
             if images_shown < max_images_to_show:
-                for i, result in enumerate(results):
+                for i, (result, target) in enumerate(zip(results, labels)):
                     if images_shown >= max_images_to_show:
                         break
 
