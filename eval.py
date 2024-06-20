@@ -62,8 +62,8 @@ def evaluation(current_loader,model,device,feat_extractor,
             # Print image
             if images_out:
                 if batches_shown < batches_to_show:
-                    os.path.join(image_location, f"output_{batches_shown}.png")
-                    Visualise.see_batch(batch, classes, config, image_location)
+                    image_path = os.path.join(image_location, f"output_{batches_shown}.png")
+                    Visualise.see_batch(batch, classes, config, image_path)
 
             del outputs
 
