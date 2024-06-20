@@ -156,7 +156,7 @@ def see_batch(batch, id2label, config, save_path):
 
         img.save(save_path)
 
-def see_output(output, batch, id2label, config):
+def see_output(output, batch, id2label, config, save_path):
     """ Visualise the output of the model
     Args:
         output (dict): Output of the model
@@ -199,6 +199,8 @@ def see_output(output, batch, id2label, config):
                 draw_boxes(img, pred_boxes, tags, False, P_COLOR)
 
             ax.imshow(img)
+
+            img.save(save_path)
 
 def see_attention_maps(batch, output, id2label, config):
     """ Visualise the attention maps of the model in only one image. Batch size must be 1
