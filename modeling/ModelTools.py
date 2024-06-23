@@ -81,7 +81,7 @@ def get_model(config):
         update_transformer(detector, config.MODEL.TX)
 
     # Dense inference refers to connections between backbone and transformer
-    # If dense inference chosen, set model to in detecter object to a DTX model that is setup
+    # If dense inference chosen, set model in detecter object to a DTX model that is setup
     # for dense connections
     if config.MODEL.dense_inference:
         print("Adding connections for dense inference.")
