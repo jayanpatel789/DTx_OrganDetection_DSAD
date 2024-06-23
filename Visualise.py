@@ -264,7 +264,7 @@ def draw_boxes(im, boxes, labels, text_onTop=True, color=(0,150,0)):
         im (PIL.Image): Image with bounding boxes drawn on it
     """
     draw = ImageDraw.Draw(im, "RGBA")
-    f_size = 55
+    f_size = 5
     transparency = 0.5
     try:
         font = ImageFont.truetype("arial.ttf", f_size)
