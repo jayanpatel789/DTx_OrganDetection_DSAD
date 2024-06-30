@@ -59,7 +59,7 @@ def test():
     preprocessor = DetrImageProcessor()
     dataset = CocoDSAD(image_path, anno_file, 
                        transformations=default_transform,
-                       preprocessor=preprocessor)
+                       feature_extractor=preprocessor)
     
     for idx in range(len(dataset)):
         img, target = dataset[idx]
