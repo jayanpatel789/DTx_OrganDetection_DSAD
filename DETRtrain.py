@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Define training configuration
 n_devices      = 1
-epochs         = 20000 # Maximum value but will be prevented by early stopping
+epochs         = 100 # 20000 is maximum value but will be prevented by early stopping
 weight_decay   = 1e-4
 learning_rate  = 1e-4
 learning_rate_backbone = 1e-5

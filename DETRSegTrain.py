@@ -115,12 +115,12 @@ class CocoPanoptic(torch.utils.data.Dataset):
         return len(self.coco['images'])
     
 # Create dataset class using the paths to the images and masks
-from transformers import DetrFeatureExtractor
+from transformers import DetrImageProcessor
 import numpy as np
 import os
 
 # we reduce the size and max_size to be able to fit the batches in GPU memory
-feature_extractor = DetrFeatureExtractor.from_pretrained("facebook/detr-resnet-50-panoptic", size=500, max_size=600)
+feature_extractor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50-panoptic")
 
 def get_folder_paths(subset, device='HPC'):
     if device == 'HPC':
