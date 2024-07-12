@@ -13,7 +13,7 @@ import torch
 import pickle
 import torch.distributed as dist
 
-from cocoeval import COCOeval
+from pycocotools.cocoeval import COCOeval
 from pycocotools.coco import COCO
 import pycocotools.mask as mask_util
 
