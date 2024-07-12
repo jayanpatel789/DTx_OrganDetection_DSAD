@@ -7,7 +7,7 @@ import os,sys,pathlib
 from datetime import datetime
 from config.config import get_cfg_defaults, combine_cfgs
 
-from tools import DETR_Wrapp, update_log_screen
+from archive.tools import DETR_Wrapp, update_log_screen
 from modeling.ModelTools import get_model
 
 from pytorch_lightning import Trainer

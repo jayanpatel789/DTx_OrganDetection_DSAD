@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 from data.Mi2cai_Wrapper import CocoMi2cai
 
 from transformers import DetrImageProcessor
-from tools import trns_register
+from archive.tools import trns_register
 
 feat_extractor = DetrImageProcessor.from_pretrained("facebook/detr-resnet-50")
 feat_extractor.size = {'shortest_edge': 550, 'longest_edge': 850}
