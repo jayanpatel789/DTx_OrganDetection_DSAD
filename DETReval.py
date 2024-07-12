@@ -19,6 +19,17 @@ stop_delta            = 1e-5
 mode             = "min"
 stop_patience         = 10   ## Real_patient = patience * check_val_every_n_epoch
 
+# Define classes
+ID2LABEL = {
+    1: 'abdominal_wall',
+    2: 'colon',
+    3: 'liver',
+    4: 'pancreas',
+    5: 'small_intestine',
+    6: 'spleen',
+    7: 'stomach'
+    }
+
 def update_log_screen(exp_path, file_name = 'eval_screen', mode = 'a'):
     """ Update the log screen to save the output of the model"""
     log_file = f"{file_name}.txt"
@@ -124,7 +135,9 @@ def main():
     # state_path = r"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\Model\DTx_SurgToolDetector_Dev\Models\DETRexample.pt"
 
     # Initialise DetrConfig using argument parameters
-    config = DetrConfig(num_queries=queries)
+    config = DetrConfig.from_pretrained(f'facebook/detr-resnet-{backbone}')
+    config.num_queries = queries
+    config.num_labels = len(ID2LABEL)
 
     model = Detr(lr=learning_rate, lr_backbone=learning_rate_backbone, weight_decay=weight_decay,
                  config=config, backbone=backbone)

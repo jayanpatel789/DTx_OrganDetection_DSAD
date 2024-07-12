@@ -32,15 +32,13 @@ class Detr(pl.LightningModule):
         # replace COCO classification head with custom head
         # we specify the "no_timm" variant here to not rely on the timm library
         # for the convolutional backbone
-        if backbone == '101':
+        if backbone == 101:
             self.model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-101",
                                                                 config=config,
-                                                                num_labels=len(ID2LABEL),
                                                                 ignore_mismatched_sizes=True)
         else:
             self.model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50",
                                                                 config=config,
-                                                                num_labels=len(ID2LABEL),
                                                                 ignore_mismatched_sizes=True)
         
         # see https://github.com/PyTorchLightning/pytorch-lightning/pull/1896
