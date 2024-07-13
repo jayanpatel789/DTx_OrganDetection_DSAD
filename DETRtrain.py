@@ -45,16 +45,6 @@ def get_img_folder_path(data_tag, device='HPC'):
     else:
         img_folder = fr"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr_multilabel_OD\{data_tag}\images"
     return Path(img_folder)
-
-def collate_fn(batch, processor):
-    pixel_values = [item[0] for item in batch]
-    encoding = processor.pad(pixel_values, return_tensors="pt")
-    labels = [item[1] for item in batch]
-    batch = {}
-    batch['pixel_values'] = encoding['pixel_values']
-    batch['pixel_mask'] = encoding['pixel_mask']
-    batch['labels'] = labels
-    return batch
     
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32" # Set memory allocation for the GPU
 
@@ -115,6 +105,17 @@ def main():
     ####################################
     from torch.utils.data import DataLoader
 
+    # Define collate function here as it uses processor
+    def collate_fn(batch):
+        pixel_values = [item[0] for item in batch]
+        encoding = processor.pad(pixel_values, return_tensors="pt")
+        labels = [item[1] for item in batch]
+        batch = {}
+        batch['pixel_values'] = encoding['pixel_values']
+        batch['pixel_mask'] = encoding['pixel_mask']
+        batch['labels'] = labels
+        return batch
+
     train_dataloader = DataLoader(train_dataset, collate_fn=collate_fn, batch_size=32, shuffle=True)
     val_dataloader = DataLoader(val_dataset, collate_fn=collate_fn, batch_size=16)
 
@@ -155,7 +156,7 @@ def main():
     update_log_screen(exp_path)
 
     trainer = Trainer(accelerator='gpu', devices=n_devices, 
-                enable_progress_bar = True,
+                enable_progress_bar = False,
                 max_epochs          = epochs,
                 gradient_clip_val   = 0.1,
                 callbacks           = [stop_criteria],
