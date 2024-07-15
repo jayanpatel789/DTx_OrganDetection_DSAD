@@ -1,6 +1,8 @@
 import torchvision
+import torch
 import os, sys
 from pathlib import Path
+import time
 
 # Define training configuration
 n_devices      = 1
@@ -46,6 +48,39 @@ def get_img_folder_path(data_tag, device='HPC'):
     else:
         img_folder = fr"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr_multilabel_OD\{data_tag}\images"
     return Path(img_folder)
+
+def speed_test(model, device, dataset, dataloader):
+    model.to(device)
+    total_time = 0
+
+    with torch.no_grad():
+        for idx, batch in enumerate(dataloader):
+            # get the inputs
+            pixel_values = batch["pixel_values"].to(device)
+            pixel_mask = batch["pixel_mask"].to(device)
+            
+            # forward pass
+            t1 = time.time()
+            outputs = model.model(pixel_values=pixel_values, pixel_mask=pixel_mask)
+            t2 = time.time()
+            total_time += (t2-t1)
+            del outputs
+
+    print(f"Total time {total_time} for {len(dataset)} samples in {len(dataloader)} batches.\n",
+          f"Time per image {total_time/len(dataset)}, time per batch {total_time/len(dataloader)}\n",
+          f"Frames per second {len(dataset)/total_time}, batches per second {len(dataloader)/total_time}")
+    total_time = 0
+    with torch.no_grad():
+        for i in range(len(dataset)):
+            pixel_values,_ = dataset[i]
+            pixel_values =  pixel_values[None,:,:,:].to(device)
+            # forward pass
+            t1 = time.time()
+            outputs = model.model(pixel_values=pixel_values)
+            t2 = time.time()
+            total_time += (t2-t1)
+    print(f"Test on one by one image, total time {total_time} for {len(dataset)} images",
+          f"\n FPS: {len(dataset)/total_time}\n seconds per image {total_time/len(dataset)}")
     
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:32" # Set memory allocation for the GPU
 
@@ -58,6 +93,9 @@ def main():
     parser.add_argument('--model_name', type=str, help='Name for results folder')
     parser.add_argument('--qs', type=int, default=100, help='Number of queries')
     parser.add_argument('--backbone', type=int, default=50, help='Insert 101 for resnet-101')
+    parser.add_argument('--TxELs', type=int, default=6, help='Number of Tx encoder layers')
+    parser.add_argument('--TxDLs', type=int, default=6, help='Number of Tx decoder layers')
+    parser.add_argument('--TxAHs', type=int, default=8, help='Number of Tx attention heads')
 
     args = parser.parse_args()
 
@@ -65,6 +103,9 @@ def main():
     model_name = args.model_name
     queries = args.qs
     backbone = args.backbone
+    TxEncoderLayers = args.TxELs
+    TxDecoderLayers = args.TxDLs
+    TxAttentionHeads = args.TxAHs
 
     # Setup results locations
     exp_path = Path.cwd() / 'Results' / model_name
@@ -139,6 +180,10 @@ def main():
     config = DetrConfig.from_pretrained(f'facebook/detr-resnet-{backbone}')
     config.num_queries = queries
     config.num_labels = len(ID2LABEL)
+    config.encoder_layers = TxEncoderLayers
+    config.decoder_layers = TxDecoderLayers
+    config.encoder_attention_heads = TxAttentionHeads
+    config.decoder_attention_heads = TxAttentionHeads
 
     model = Detr(lr=learning_rate, lr_backbone=learning_rate_backbone, weight_decay=weight_decay,
                  config=config, backbone=backbone)
@@ -182,6 +227,9 @@ def main():
     evaluator.accumulate()
     evaluator.summarize()
 
+    torch.cuda.empty_cache()
+
+    speed_test(model, device, test_dataset, test_dataloader)
 
     update_log_screen(exp_path)
 

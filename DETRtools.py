@@ -2,6 +2,7 @@ import pytorch_lightning as pl
 from transformers import DetrForObjectDetection
 import torch
 import torchvision
+import torchvision.transforms as transforms
 import os
 
 # DEFINITIONS
@@ -118,23 +119,32 @@ class Detr(pl.LightningModule):
 class DSADDetection(torchvision.datasets.CocoDetection):
     # Change to initialisation arguments. train argument removed and data_tag
     # argument added so that train, test and val datasets can be created
-    def __init__(self, img_folder, processor, data_tag):
+    def __init__(self, img_folder, processor, data_tag, device='HPC',
+                 transformations=None):
         """
         img_folder: path to the root directory with all images
         """
         # Change by adding error checking for data_tag
         if data_tag not in ['train', 'test', 'val']:
             raise ValueError("Incorrect data tag used for initialisation of dataset")
-        root = fr"../DSAD4DeTr_multilabel_OD/{data_tag}"
+        if device == 'HPC':
+            root = fr"../DSAD4DeTr_multilabel_OD/{data_tag}"
+        else:
+            root = fr"C:\Users\jayan\Documents\MECHATRONICS YR4\MECH5845M - Professional Project\DSAD4DeTr_multilabel_OD\{data_tag}"
         ann_file = os.path.join(root, 'annotations', f"{data_tag}_OD_annotations.json") # Change to path for ann_file
         print(f"{data_tag} ann file: {ann_file}")
         super(DSADDetection, self).__init__(img_folder, ann_file)
         self.processor = processor
+        self.transforms = transformations
 
     def __getitem__(self, idx):
         # read in PIL image and target in COCO format
         # feel free to add data augmentation here before passing them to the next step
         img, target = super(DSADDetection, self).__getitem__(idx)
+
+        # Apply transformations if available
+        if self.transforms is not None:
+            img, anno = self.transforms(img, anno) 
 
         # preprocess image and target (converting target to DETR format, resizing + normalization of both image and target)
         image_id = self.ids[idx]

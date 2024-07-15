@@ -57,6 +57,10 @@ def main():
     parser.add_argument('--model_name', type=str, help='Name for results folder')
     parser.add_argument('--qs', type=int, default=100, help='Number of queries')
     parser.add_argument('--backbone', type=int, default=50, help='Insert 101 for resnet-101')
+    parser.add_argument('--TxELs', type=int, default=6, help='Number of Tx encoder layers')
+    parser.add_argument('--TxDLs', type=int, default=6, help='Number of Tx decoder layers')
+    parser.add_argument('--TxAHs', type=int, default=8, help='Number of Tx attention heads')
+    parser.add_argument('--augment', type=str, default='False', help='Should data augmentation be used')
 
     args = parser.parse_args()
 
@@ -64,6 +68,10 @@ def main():
     model_name = args.model_name
     queries = args.qs
     backbone = args.backbone
+    TxEncoderLayers = args.TxELs
+    TxDecoderLayers = args.TxDLs
+    TxAttentionHeads = args.TxAHs
+    do_augmentation = args.augment
 
     # Setup results locations
     exp_path = Path.cwd() / 'Results' / model_name
@@ -83,6 +91,23 @@ def main():
     ####################################
     from transformers import DetrImageProcessor
     from DETRtools import DSADDetection
+    from data.DataTools import trns_register
+
+    # Define transformations
+    if do_augmentation in ['True', 'true', 't', 'T']:
+        transformations = {
+            'hsv'                : (8,8,5),
+            'flip_horizontal'    : 1,
+            'scale'              : 0.1,
+            'translate'          : 0.1,
+            'rotate'             : 10,
+            'shear'              : 0.1,
+            'probability'        : 0.33
+        }
+        transform_reg = trns_register(transformations)
+    else:
+        transform_reg = None
+
 
     processor = DetrImageProcessor.from_pretrained(f"facebook/detr-resnet-{backbone}")
 
@@ -90,7 +115,7 @@ def main():
     train_img_folder = get_img_folder_path('train', device='HPC')
 
     val_dataset = DSADDetection(img_folder=val_img_folder, processor=processor, data_tag='val')
-    train_dataset = DSADDetection(img_folder=train_img_folder, processor=processor, data_tag='train')
+    train_dataset = DSADDetection(img_folder=train_img_folder, processor=processor, data_tag='train', transformations=transform_reg)
 
     # Check dataset sizes
     print("Number of training examples:", len(train_dataset))
@@ -136,6 +161,10 @@ def main():
     config = DetrConfig.from_pretrained(f'facebook/detr-resnet-{backbone}')
     config.num_queries = queries
     config.num_labels = len(ID2LABEL)
+    config.encoder_layers = TxEncoderLayers
+    config.decoder_layers = TxDecoderLayers
+    config.encoder_attention_heads = TxAttentionHeads
+    config.decoder_attention_heads = TxAttentionHeads
 
     # Setup model
     model = Detr(lr=learning_rate, lr_backbone=learning_rate_backbone, weight_decay=weight_decay,
