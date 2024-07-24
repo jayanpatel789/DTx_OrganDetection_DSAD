@@ -114,7 +114,7 @@ def main():
     if not exp_path.exists():
         os.makedirs(exp_path)
 
-    update_log_screen(exp_path, mode='w')
+    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen', mode='w')
 
     print(f"Exp path: {exp_path}")
 
@@ -139,7 +139,7 @@ def main():
 
     print("************** Datasets made *****************")
 
-    update_log_screen(exp_path)
+    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen')
 
     ####################################
     # Now setting up dataloader
@@ -161,7 +161,7 @@ def main():
 
     print("************* Dataloaders made ***************")
 
-    update_log_screen(exp_path)
+    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen')
 
     ####################################
     # Evaluation using PyTorch Lightning
@@ -246,7 +246,7 @@ def main():
 
     speed_test(model, device, test_dataset, test_dataloader)
 
-    update_log_screen(exp_path)
+    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen')
 
 if __name__ == "__main__":
     main()
