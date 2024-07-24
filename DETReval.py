@@ -96,6 +96,7 @@ def main():
     parser.add_argument('--TxELs', type=int, default=6, help='Number of Tx encoder layers')
     parser.add_argument('--TxDLs', type=int, default=6, help='Number of Tx decoder layers')
     parser.add_argument('--TxAHs', type=int, default=8, help='Number of Tx attention heads')
+    parser.add_argument('--remove', type=str, default=None, help='Remove CNN backbone or Tx weights from model')
 
     args = parser.parse_args()
 
@@ -106,6 +107,7 @@ def main():
     TxEncoderLayers = args.TxELs
     TxDecoderLayers = args.TxDLs
     TxAttentionHeads = args.TxAHs
+    remove = args.remove
 
     # Setup results locations
     exp_path = Path.cwd() / 'Results' / model_name
@@ -188,7 +190,20 @@ def main():
     model = Detr(lr=learning_rate, lr_backbone=learning_rate_backbone, weight_decay=weight_decay,
                  config=config, backbone=backbone)
     state_dict = torch.load(state_path)
-    model.load_state_dict(state_dict)
+
+    # Choose whether to remove backbone or transformer weights
+    if remove == None:
+        new_state_dict = state_dict
+    elif remove == 'CNN':
+        new_state_dict = {k: v for k, v in state_dict.items() if not k.startswith('model.model.backbone.')}
+    elif remove == 'Tx':
+        new_state_dict = {k: v for k, v in state_dict.items() if not k.startswith('model.model.encoder') and not k.startswith('model.model.decoder')}
+    elif remove == 'TxE':
+        new_state_dict = {k: v for k, v in state_dict.items() if not k.startswith('model.model.encoder')}
+    elif remove == 'TxD':
+        new_state_dict = {k: v for k, v in state_dict.items() if not k.startswith('model.model.decoder')}
+
+    model.load_state_dict(new_state_dict, strict=False)
     model.eval()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
