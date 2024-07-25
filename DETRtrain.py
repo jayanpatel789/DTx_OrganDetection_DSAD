@@ -61,6 +61,7 @@ def main():
     parser.add_argument('--TxDLs', type=int, default=6, help='Number of Tx decoder layers')
     parser.add_argument('--TxAHs', type=int, default=8, help='Number of Tx attention heads')
     parser.add_argument('--augment', type=str, default='False', help='Should data augmentation be used')
+    parser.add_argument('--freeze', type=str, default=None, help='Freeze CNN or Tx')
 
     args = parser.parse_args()
 
@@ -72,6 +73,7 @@ def main():
     TxDecoderLayers = args.TxDLs
     TxAttentionHeads = args.TxAHs
     do_augmentation = args.augment
+    freeze = args.freeze
 
     # Setup results locations
     exp_path = Path.cwd() / 'Results' / model_name
@@ -169,7 +171,7 @@ def main():
     # Setup model
     model = Detr(lr=learning_rate, lr_backbone=learning_rate_backbone, weight_decay=weight_decay,
                  config=config, backbone=backbone, train_dataloader=train_dataloader,
-                 val_dataloader=val_dataloader)
+                 val_dataloader=val_dataloader, freeze=freeze)
 
     update_log_screen(exp_path)
 

@@ -28,7 +28,7 @@ cooldown        = 5
 ###### STANDARD DETR #######
 class Detr(pl.LightningModule):
     def __init__(self, lr, lr_backbone, weight_decay, config, backbone,
-                 train_dataloader=None, val_dataloader=None):
+                 train_dataloader=None, val_dataloader=None, freeze=None):
         super().__init__()
         # replace COCO classification head with custom head
         # we specify the "no_timm" variant here to not rely on the timm library
@@ -41,6 +41,15 @@ class Detr(pl.LightningModule):
             self.model = DetrForObjectDetection.from_pretrained("facebook/detr-resnet-50",
                                                                 config=config,
                                                                 ignore_mismatched_sizes=True)
+            
+        if freeze == 'CNN':
+            for param in self.model.model.backbone.parameters():
+                param.requires_grad = False
+        elif freeze == 'Tx':
+            for param in self.model.model.encoder.parameters():
+                param.requires_grad = False
+            for param in self.model.model.decoder.parameters():
+                param.requires_grad = False
         
         # see https://github.com/PyTorchLightning/pytorch-lightning/pull/1896
         self.lr = lr

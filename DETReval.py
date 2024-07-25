@@ -97,6 +97,7 @@ def main():
     parser.add_argument('--TxDLs', type=int, default=6, help='Number of Tx decoder layers')
     parser.add_argument('--TxAHs', type=int, default=8, help='Number of Tx attention heads')
     parser.add_argument('--remove', type=str, default=None, help='Remove CNN backbone or Tx weights from model')
+    parser.add_argument('--freeze', type=str, default=None, help='Freeze CNN or Tx')
 
     args = parser.parse_args()
 
@@ -108,13 +109,14 @@ def main():
     TxDecoderLayers = args.TxDLs
     TxAttentionHeads = args.TxAHs
     remove = args.remove
+    freeze = args.freeze
 
     # Setup results locations
     exp_path = Path.cwd() / 'Results' / model_name
     if not exp_path.exists():
         os.makedirs(exp_path)
 
-    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen', mode='w')
+    update_log_screen(exp_path, mode='w')
 
     print(f"Exp path: {exp_path}")
 
@@ -139,7 +141,7 @@ def main():
 
     print("************** Datasets made *****************")
 
-    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen')
+    update_log_screen(exp_path)
 
     ####################################
     # Now setting up dataloader
@@ -161,7 +163,7 @@ def main():
 
     print("************* Dataloaders made ***************")
 
-    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen')
+    update_log_screen(exp_path)
 
     ####################################
     # Evaluation using PyTorch Lightning
@@ -188,7 +190,7 @@ def main():
     config.decoder_attention_heads = TxAttentionHeads
 
     model = Detr(lr=learning_rate, lr_backbone=learning_rate_backbone, weight_decay=weight_decay,
-                 config=config, backbone=backbone)
+                 config=config, backbone=backbone, freeze=freeze)
     state_dict = torch.load(state_path)
 
     # Choose whether to remove backbone or transformer weights
@@ -246,7 +248,7 @@ def main():
 
     speed_test(model, device, test_dataset, test_dataloader)
 
-    update_log_screen(exp_path, file_name=f'no_{remove}_eval_screen')
+    update_log_screen(exp_path)
 
 if __name__ == "__main__":
     main()
