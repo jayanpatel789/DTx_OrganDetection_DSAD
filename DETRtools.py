@@ -7,14 +7,15 @@ import os
 
 # DEFINITIONS
 
+# Define classes
 ID2LABEL = {
     1: 'abdominal_wall',
     2: 'colon',
     3: 'liver',
     4: 'pancreas',
-    5: 'small_intestine',
-    6: 'spleen',
-    7: 'stomach'
+    5: 'stomach',
+    6: 'small_intestine',
+    7: 'spleen'
     }
 
 ## LEARNING_SCHEDULER parameters for ReduceLROnPlateau from pytorch

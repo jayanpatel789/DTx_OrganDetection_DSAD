@@ -3,7 +3,7 @@ from pathlib import Path
 
 # Define training configuration
 n_devices      = 1
-epochs         = 100 # 20000 is maximum value but will be prevented by early stopping
+epochs         = 200 # 20000 is maximum value but will be prevented by early stopping
 weight_decay   = 1e-4
 learning_rate  = 1e-4
 learning_rate_backbone = 1e-5
@@ -24,9 +24,9 @@ ID2LABEL = {
     2: 'colon',
     3: 'liver',
     4: 'pancreas',
-    5: 'small_intestine',
-    6: 'spleen',
-    7: 'stomach'
+    5: 'stomach',
+    6: 'small_intestine',
+    7: 'spleen'
     }
 
 def update_log_screen(exp_path, file_name = 'train_screen', mode = 'a'):
