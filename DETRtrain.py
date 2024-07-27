@@ -76,7 +76,7 @@ def main():
     freeze = args.freeze
 
     # Setup results locations
-    exp_path = Path.cwd() / 'Results' / model_name
+    exp_path = Path.cwd() / 'NewResults' / model_name
     if not exp_path.exists():
         os.makedirs(exp_path)
 
