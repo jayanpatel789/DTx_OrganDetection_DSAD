@@ -98,6 +98,7 @@ def main():
     parser.add_argument('--TxAHs', type=int, default=8, help='Number of Tx attention heads')
     parser.add_argument('--remove', type=str, default=None, help='Remove CNN backbone or Tx weights from model')
     parser.add_argument('--freeze', type=str, default=None, help='Freeze CNN or Tx')
+    parser.add_argument('--untrained', type=int, default=0, help='Use untrained model')
 
     args = parser.parse_args()
 
@@ -110,6 +111,7 @@ def main():
     TxAttentionHeads = args.TxAHs
     remove = args.remove
     freeze = args.freeze
+    untrained = args.untrained
 
     # Setup results locations
     exp_path = Path.cwd() / 'NewResults' / model_name
@@ -205,7 +207,9 @@ def main():
     elif remove == 'TxD':
         new_state_dict = {k: v for k, v in state_dict.items() if not k.startswith('model.model.decoder')}
 
-    model.load_state_dict(new_state_dict, strict=False)
+    if untrained == 0:
+        model.load_state_dict(new_state_dict, strict=False)
+    
     model.eval()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
