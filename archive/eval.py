@@ -9,7 +9,7 @@ from config.config import get_cfg_defaults, combine_cfgs
 import matplotlib.pyplot as plt
 
 from transformers import DetrImageProcessor
-from archive.tools import DETR_Wrapp, update_log_screen
+from tools import DETR_Wrapp, update_log_screen
 from modeling.ModelTools import get_model
 from data.DataTools import get_data
 

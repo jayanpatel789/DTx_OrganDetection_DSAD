@@ -1,5 +1,5 @@
 import torch
-from archive.tools import time_it
+from tools import time_it
 import numpy as np
 
 def box_cxcywh_to_xyxy(x):

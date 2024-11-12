@@ -1,7 +1,7 @@
 name: "Dense tranformer (DTx) & MultiScale (Res2Net) & Contrastive loss for DSAD"
 DATA:
   resize_shortedge: 320
-  Do_augmentation: True
+  Do_augmentation: False
   AUGMENTATION:
     probability    : 0.33
     flip_horizontal: 1
