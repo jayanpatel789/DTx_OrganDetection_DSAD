@@ -10,7 +10,7 @@ Work done at the [STORM Lab UK](https://www.stormlabuk.com/) and the [Centre for
 ### Acknowledgments
 This work was inspired from the paper [End-to-end object detection with Transformers](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123460205.pdf) and our implementation leverages some of the code provided in the [DETR github](https://github.com/facebookresearch/detr) and the [HugginFace documentation](https://huggingface.co/docs/transformers/model_doc/detr)
 
-# Disclaimer
+### *Disclaimer*
 Several of the files within this repository are maintained from the original repository. Through development they were altered but they do not necessarily impact the functional model training and evaluation code. Furthermore, several notebooks were made for testing of different features. These also do not impact the final training and evaluation code. The important files are highlighted below.
 
 # Installation
