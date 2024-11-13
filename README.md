@@ -17,8 +17,8 @@ Several of the files within this repository are maintained from the original rep
 This code was tested with conda=23.1.0, python=3.9 and ubuntu 20.04.
 
 ```
-git clone https://github.com/L0za007/DTx_SurgToolDetector.git
-cd DTx-SurgToolDetector
+git clone https://github.com/jayanpatel789/DTx_OrganDetection_DSAD.git
+cd DTx_OrganDetection_DSAD
 conda env create --file env.yml
 conda activate DTx
 ```
@@ -38,7 +38,7 @@ The DSAD was first split into train, test and validation splits using the sugges
 - [imageManagerMultilabel.py](http://imageManagerMultilabel.py) - creates copy of multilabel folder, organised into train, test and val folders.
 - [multilabelToCOCO.py](http://multilabelToCOCO.py) - created bounding box, segmentation and panoptic segmentation masks for the multilabel folder only.
 
-For the final training only the processed multilabel data was used.
+For the final project only the processed multilabel data was used, using the bounding box labels.
 
 # Training 
 With the processed input data, run the following command to start training.
@@ -70,6 +70,7 @@ These parameters should be correct for successful model initialisation.
 - --TxELs: Number of Transformer encoder layers (default: 6, integer).
 - --TxDLs: Number of Transformer decoder layers (default: 6, integer).
 - --TxAHs: Number of Transformer attention heads (default: 8, integer).
+
 Other optional parameters that can be used are as follows:
 - --remove: Remove specific model components; options are CNN or Tx (default: None, string).
 - --freeze: Freeze specific parts of the model; options are CNN or Tx (default: None, string).
