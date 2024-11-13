@@ -1,15 +1,17 @@
-# Real-time surgical tool detection with multi-scale positional encoding and contrastive learning
-PyTorch implementation for the presented model in the [paper](https://ietresearch.onlinelibrary.wiley.com/doi/full/10.1049/htl2.12060). An anchor-free architecture based on a transformer that allows realtime tool detection. It utilize multi-scale features within the backbone and the transformer-based architecture through positional encoding that can refine and capture context and structural information of different-sized tools. Furthermore, a supervised contrastive loss is introduced to optimize representations of object embeddings, resulting in improved feed-forward network performances for classifying localized bounding boxes. The strategy demonstrates superiority to state-of-the-art (SOTA) methods.  
-Gerardo Loza, 
-[Pietro Valdastri](https://eps.leeds.ac.uk/electronic-engineering/staff/863/professor-pietro-valdastri), 
-[Sharib Ali](https://eps.leeds.ac.uk/computing/staff/11465/dr-sharib-ali)
+# DETR in Medical Imaging: Organ Detection in Minimally Invasive Surgery
+PyTorch implementation for investigating transformer configurations in organ detection using the Detection Transformer (DETR). This project explores the application of DETR for bounding box detection of organs in laparoscopic images, leveraging a ResNet-50 backbone and transformer architecture. Various transformer configurations, including encoder-decoder depth and attention heads, were evaluated to optimize detection accuracy. Results highlight the potential of asymmetric configurations and multi-head attention for improving precision in minimally invasive surgery, offering insights for future advancements in medical computer vision.  
+[Gerardo Loza](https://ai-medical.leeds.ac.uk/profiles/gerardo-loza/), 
+[Pietro Valdastri](https://eps.leeds.ac.uk/electronic-engineering/staff/863/professor-pietro-valdastri)
 
-<img src="./imgs/DTX-Detector.jpg" />
+<img src="./imgs/DTx_Organ_Detection_DSAD.png" />
 
 Work done at the [STORM Lab UK](https://www.stormlabuk.com/) and the [Centre for Doctoral Training in Artificial Intelligence for Medical Diagnosis and Care](https://ai-medical.leeds.ac.uk/), University of Leeds
 
 ### Acknowledgments
-This work was inspired from the paper [End-to-end object detection with Transformers](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123460205.pdf) and our implementation laverages the some of the code provided in the [DETR github](https://github.com/facebookresearch/detr) and the [HugginFace documentation](https://huggingface.co/docs/transformers/model_doc/detr)
+This work was inspired from the paper [End-to-end object detection with Transformers](https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123460205.pdf) and our implementation leverages some of the code provided in the [DETR github](https://github.com/facebookresearch/detr) and the [HugginFace documentation](https://huggingface.co/docs/transformers/model_doc/detr)
+
+# Disclaimer
+Several of the files within this repository are maintained from the original repository. Through development they were altered but they do not necessarily impact the functional model training and evaluation code. Furthermore, several notebooks were made for testing of different features. These also do not impact the final training and evaluation code. The important files are highlighted below.
 
 # Installation
 This code was tested with conda=23.1.0, python=3.9 and ubuntu 20.04.
@@ -22,27 +24,59 @@ conda activate DTx
 ```
 
 # Data
-The path to the folder(s)' containing the images for each of your sets (training, validation and testing) must be specified in the config file using *root* and *\*_imgs_path* . The annotations must be in the [COCO format](https://cocodataset.org/#home), a .json file must be created for each set and copied into the *./data/datasets* directory. Alternatively, you can modify the path to the json files in the *sets_path* configuration. 
-The default path is *./data/datasets* where there is a json file for each set of the **m2cai16-too-location dataset**. These files contains the annotation in the coco format, however, the images must be downladed from the link provided by the author of [m2cai16-too-location](https://ai.stanford.edu/~syyeung/tooldetection.html).
+The data used for this project was the Dresden Surgical Anatomy Dataset (DSAD). Download the DSAD from [here](https://springernature.figshare.com/articles/dataset/The_Dresden_Surgical_Anatomy_Dataset_for_abdominal_organ_segmentation_in_surgical_data_science/21702600?file=38494425).
+
+The DSAD was first split into train, test and validation splits using the suggested splits in [Kolbinger et al., 2023](https://pubmed.ncbi.nlm.nih.gov/37526099/). To utilise the HuggingFace DETR, COCO annotations must be created for the DSAD, hence COCO conversion files were developed.
+
+### Entire DSAD - Object Detection, Segmentation
+
+- [imageManager.py](http://imageManager.py) - creates copy of DSAD folder, organised into train, test and val folders.
+- [DSADtoCOCO.py](http://DSADtoCOCO.py) - creates bounding box and segmentation labels for all images in the dataset.
+
+### Multilabel - Panoptic Segmentation
+
+- [imageManagerMultilabel.py](http://imageManagerMultilabel.py) - creates copy of multilabel folder, organised into train, test and val folders.
+- [multilabelToCOCO.py](http://multilabelToCOCO.py) - created bounding box, segmentation and panoptic segmentation masks for the multilabel folder only.
+
+For the final training only the processed multilabel data was used.
 
 # Training 
 With the processed input data, run the following command to start training.
 
 ```
-python train.py -c config/Exps/DTx_MS_CL.yaml
+python DETRtrain.py --model_name "test_model_name"
 ```
+Where:
+- --model_name: Name for the results folder (string, required).
 
-This repo includes the configuration for the experiments presented in the paper but you can modify or create yours by reading the specifications of the *config/config.py* file.
+The following parameters can be used at the command line to alter the model configuration:
+- --qs: Number of object queries (default: 100, integer).
+- --backbone: Backbone type, use 50 for ResNet-50 or 101 for ResNet-101 (default: 50, integer).
+- --TxELs: Number of Transformer encoder layers (default: 6, integer).
+- --TxDLs: Number of Transformer decoder layers (default: 6, integer).
+- --TxAHs: Number of Transformer attention heads (default: 8, integer).
+- --augment: Use data augmentation (True or False, default: False, string).
+- --freeze: Freeze specific parts of the model; options are CNN or Tx (default: None, string).
 
 # Evaluation 
-Use the same configuration you used for training and excute the following command, by default, it will take the *'final.pth'* checkpoint from the Results folder and your specific experiment.
+Insert the name of the model name into the model_name parameter and ensure that the model config parameters equal the parameters of the trained model being tested.
 
 ```
-python eval.py -c config/Exps/DTx_MS_CL.yaml
+python eval.py -model_name "test_model_name"
 ```
+These parameters should be correct for successful model initialisation.
+- --qs: Number of object queries (default: 100, integer).
+- --backbone: Backbone type, use 50 for ResNet-50 or 101 for ResNet-101 (default: 50, integer).
+- --TxELs: Number of Transformer encoder layers (default: 6, integer).
+- --TxDLs: Number of Transformer decoder layers (default: 6, integer).
+- --TxAHs: Number of Transformer attention heads (default: 8, integer).
+Other optional parameters that can be used are as follows:
+- --remove: Remove specific model components; options are CNN or Tx (default: None, string).
+- --freeze: Freeze specific parts of the model; options are CNN or Tx (default: None, string).
+- --untrained: Use an untrained model (0 for pretrained, 1 for untrained, default: 0, integer).
 
 # Citation
-
+This is the citation for the original repo that was forked.
 ```bibtex
 @article{Loza2023DTx,
    author = {Gerardo Loza and Pietro Valdastri and Sharib Ali},
