@@ -88,7 +88,7 @@ def main():
     # Obtain parameters from the command line arguments
     import argparse
 
-    parser = argparse.ArgumentParser(description="Train a DETR model")
+    parser = argparse.ArgumentParser(description="Test a DETR model")
 
     parser.add_argument('--model_name', type=str, help='Name for results folder')
     parser.add_argument('--qs', type=int, default=100, help='Number of queries')
